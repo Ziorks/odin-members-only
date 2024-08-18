@@ -22,4 +22,9 @@ router
 
 router.get("/logout", indexController.indexLogoutGet);
 
+router
+  .route("/message")
+  .get(indexController.indexMessageGet)
+  .post(indexController.indexMessagePost);
+
 module.exports = router;

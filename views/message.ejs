@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/style.css">
+  <title><%= title %></title>
+</head>
+
+<body>
+  <h1><%= title %></h1>
+  <% if (currentUser.is_member) { %>
+  <%- include('partials/errors.ejs') %>
+  <form action="/message" method="post">
+    <div>
+      <label for="title">Title:</label>
+      <input type="text" name="title" id="title" placeholder="Title" required>
+    </div>
+    <div>
+      <label for="message">Message:</label>
+      <textarea name="message" id="message" placeholder="Your message..." required></textarea>
+    </div>
+    <button type="submit">Submit Message</button>
+  </form>
+  <% } else if(currentUser) { %>
+  <p>You must become a <a href="/membership">member</a> to post messages.</p>
+  <% } else { %>
+  <p>You must <a href="/login">Login</a> or <a href="/signup">Sign Up</a> to post a message.</p>
+  <% } %>
+</body>
+
+</html>

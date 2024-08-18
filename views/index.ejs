@@ -10,10 +10,29 @@
 <body>
   <h1><%= title %></h1>
   <% if (currentUser) { %>
-  <a href="/logout">Logout</a>
-  <a href="/createMessage">Create a new message</a>
+  <p>Welcome <%= currentUser.username %>!
+    <a href="/logout">Logout</a>
+  </p>
+  <% if (currentUser.is_member) { %>
+  <a href="/message">Create a new message</a>
   <% } else { %>
-  <p><a href="/login">Login</a> or <a href="/signup">Sign Up</a></p>
+  <p>Become a <a href="/membership">member</a> to see message details and post your own messages.</p>
+  <% } %>
+  <% } else { %>
+  <p><a href="/login">Login</a> or <a href="/signup">Sign Up</a> and become a member to see message details and post your own messages.</p>
+  <% } %>
+  <% if (locals.messages) { %>
+  <ul>
+    <% messages.forEach(message=>{ %>
+    <li>
+      <p>Title: <%= message.title %></p>
+      <p><%= message.message %></p>
+      <p>Posted by: <%= currentUser && currentUser.is_member ? `${message.username} on ${message.date}` : 'Anonymous User' %></p>
+    </li>
+    <% }) %>
+  </ul>
+  <% } else { %>
+  <p>No messages yet :&lpar;</p>
   <% } %>
 </body>
 

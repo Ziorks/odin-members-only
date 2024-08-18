@@ -49,9 +49,21 @@ const validateMembership = [
     .withMessage("Incorrect password. (try 'applesauce')"),
 ];
 
+const validateMessage = [
+  body("title")
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage("Title " + maxLengthMessage),
+  body("message")
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage("Message " + maxLengthMessage),
+];
+
 //name convention <rootPath><thing><httpVerb>
-function indexGet(req, res) {
-  res.render("index", { title: "Homepage" });
+async function indexGet(req, res) {
+  const messages = await db.getMessages();
+  res.render("index", { title: "Homepage", messages });
 }
 
 function indexSignupGet(req, res) {
@@ -125,6 +137,31 @@ function indexLogoutGet(req, res, next) {
   });
 }
 
+function indexMessageGet(req, res) {
+  res.render("message", { title: "New Message" });
+}
+
+const indexMessagePost = [
+  validateMessage,
+  async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res
+        .status(400)
+        .render("message", { title: "New Message", errors: errors.array() });
+    }
+
+    try {
+      const { title, message } = req.body;
+      const { id } = req.user;
+      await db.createMessage(title, message, id);
+      res.redirect("/");
+    } catch (err) {
+      next(err);
+    }
+  },
+];
+
 module.exports = {
   indexGet,
   indexSignupGet,
@@ -134,4 +171,6 @@ module.exports = {
   indexLoginGet,
   indexLoginPost,
   indexLogoutGet,
+  indexMessageGet,
+  indexMessagePost,
 };
