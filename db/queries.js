@@ -34,13 +34,11 @@ async function createMessage(title, message, userId) {
 }
 
 async function giveUserMember(userId) {
-  await pool.query("UPDATE users SET is_member = TRUE, WHERE id = $1", [
-    userId,
-  ]);
+  await pool.query("UPDATE users SET is_member = TRUE WHERE id = $1", [userId]);
 }
 
 async function giveUserAdmin(userId) {
-  await pool.query("UPDATE users SET is_admin = TRUE, WHERE id = $1", [userId]);
+  await pool.query("UPDATE users SET is_admin = TRUE WHERE id = $1", [userId]);
 }
 
 async function deleteMessage(messageId) {

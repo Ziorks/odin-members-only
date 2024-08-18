@@ -1,4 +1,5 @@
 const { body, validationResult } = require("express-validator");
+const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const db = require("../db/queries");
 
@@ -105,10 +106,32 @@ const indexMembershipPost = [
   },
 ];
 
+function indexLoginGet(req, res) {
+  res.render("login", { title: "Login" });
+}
+
+const indexLoginPost = passport.authenticate("local", {
+  successRedirect: "/",
+  failureRedirect: "/",
+});
+
+function indexLogoutGet(req, res, next) {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+
+    res.redirect("/");
+  });
+}
+
 module.exports = {
   indexGet,
   indexSignupGet,
   indexSignupPost,
   indexMembershipGet,
   indexMembershipPost,
+  indexLoginGet,
+  indexLoginPost,
+  indexLogoutGet,
 };
