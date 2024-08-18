@@ -67,6 +67,9 @@ app.use((req, res, next) => {
 });
 
 app.use("/", indexRouter);
+app.get("*", (req, res) => {
+  res.status(404).render("404", { title: "404 - Not Found" });
+});
 
 app.use((err, req, res, next) => {
   res.status(500).send(err);
