@@ -68,5 +68,9 @@ app.use((req, res, next) => {
 
 app.use("/", indexRouter);
 
+app.use((err, req, res, next) => {
+  res.status(500).send(err);
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
