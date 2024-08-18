@@ -10,4 +10,9 @@ router
   .get(indexController.indexSignupGet)
   .post(indexController.indexSignupPost);
 
+router
+  .route("/membership")
+  .get(indexController.indexMembershipGet)
+  .post(indexController.indexMembershipPost);
+
 module.exports = router;

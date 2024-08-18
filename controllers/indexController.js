@@ -38,6 +38,16 @@ const validateSignup = [
     .withMessage("Passwords do not match."),
 ];
 
+const validateMembership = [
+  body("password")
+    .not()
+    .equals("applesauce")
+    .withMessage("Oh yeah, that's something else.  Try 'bratwurst' actually.")
+    .bail()
+    .equals(process.env.MEMBERSHIP_PASSWORD)
+    .withMessage("Incorrect password. (try 'applesauce')"),
+];
+
 //name convention <rootPath><thing><httpVerb>
 function indexGet(req, res) {
   res.render("index", { title: "Homepage" });
@@ -72,4 +82,33 @@ const indexSignupPost = [
   },
 ];
 
-module.exports = { indexGet, indexSignupGet, indexSignupPost };
+function indexMembershipGet(req, res) {
+  res.render("membership", { title: "Activate Membership" });
+}
+
+const indexMembershipPost = [
+  validateMembership,
+  async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).render("membership", {
+        title: "Activate Membership",
+        errors: errors.array(),
+      });
+    }
+    try {
+      await db.giveUserMember(req.user.id);
+      res.redirect("/");
+    } catch (err) {
+      next(err);
+    }
+  },
+];
+
+module.exports = {
+  indexGet,
+  indexSignupGet,
+  indexSignupPost,
+  indexMembershipGet,
+  indexMembershipPost,
+};
