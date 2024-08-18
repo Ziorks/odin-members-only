@@ -1,9 +1,51 @@
 const pool = require("./pool");
 
-//just an example
-async function getAll() {
-  const { rows } = await pool.query("SELECT * FROM table");
+async function getMessages() {
+  const { rows } = await pool.query("SELECT * FROM messages");
   return rows;
 }
 
-module.exports = { getAll };
+async function getUser(userId) {
+  const { rows } = await pool.query("SELECT * FROM users WHERE id = $1", [
+    userId,
+  ]);
+  return rows[0];
+}
+
+async function createUser(firstName, lastName, username, password) {
+  await pool.query(
+    "INSERT INTO users (first_name, last_name, username, password) VALUES ($1, $2, $3, $4)",
+    [firstName, lastName, username, password]
+  );
+}
+
+async function createMessage(title, message, userId) {
+  await pool.query(
+    "INSERT INTO messages (title, message, user_id) VALUES ($1, $2, $3)",
+    [title, message, userId]
+  );
+}
+
+async function giveUserMember(userId) {
+  await pool.query("UPDATE users SET is_member = TRUE, WHERE id = $1", [
+    userId,
+  ]);
+}
+
+async function giveUserAdmin(userId) {
+  await pool.query("UPDATE users SET is_admin = TRUE, WHERE id = $1", [userId]);
+}
+
+async function deleteMessage(messageId) {
+  await pool.query("DELETE FROM messages WHERE id = $1", [messageId]);
+}
+
+module.exports = {
+  getMessages,
+  getUser,
+  createUser,
+  createMessage,
+  giveUserMember,
+  giveUserAdmin,
+  deleteMessage,
+};
