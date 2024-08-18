@@ -2,11 +2,35 @@ const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const db = require("../db/queries");
 
+const maxLengthMessage = "can't be longer than 255 characters.";
+const alphaMessage = "can only contain letters.";
+
 const validateSignup = [
-  body("firstname").trim(),
-  body("lastname").trim(),
-  body("username").trim(),
-  body("password"),
+  body("firstname")
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage("First name " + maxLengthMessage)
+    .isAlpha()
+    .withMessage("First name " + alphaMessage),
+  body("lastname")
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage("Last name " + maxLengthMessage)
+    .isAlpha()
+    .withMessage("Last name " + alphaMessage),
+  body("username")
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage("Username " + maxLengthMessage)
+    .custom(async (value) => {
+      const user = await db.getUserByUsername(value);
+      if (user) {
+        throw new Error("Username already in use.");
+      }
+    }),
+  body("password")
+    .isLength({ min: 4 })
+    .withMessage("Password must be at least 4 characters long."),
   body("confirmPassword")
     .custom((value, { req }) => {
       return value === req.body.password;
