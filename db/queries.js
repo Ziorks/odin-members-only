@@ -1,10 +1,18 @@
 const pool = require("./pool");
 
-async function getMessages() {
-  const sql =
-    "SELECT messages.title, messages.message, users.username, messages.date FROM messages JOIN users ON messages.user_id = users.id";
-  const { rows } = await pool.query(sql);
+async function getAllMessages() {
+  const { rows } = await pool.query(
+    "SELECT messages.id, messages.title, messages.message, users.username, messages.date FROM messages JOIN users ON messages.user_id = users.id"
+  );
   return rows;
+}
+
+async function getMessageById(messageId) {
+  const { rows } = await pool.query(
+    "SELECT messages.id, messages.title, messages.message, users.username, messages.date FROM messages JOIN users ON messages.user_id = users.id WHERE messages.id = $1",
+    [messageId]
+  );
+  return rows[0];
 }
 
 async function getUserById(userId) {
@@ -48,7 +56,8 @@ async function deleteMessage(messageId) {
 }
 
 module.exports = {
-  getMessages,
+  getAllMessages,
+  getMessageById,
   getUserById,
   getUserByUsername,
   createUser,

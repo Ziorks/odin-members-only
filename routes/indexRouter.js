@@ -27,4 +27,9 @@ router
   .get(indexController.indexMessageGet)
   .post(indexController.indexMessagePost);
 
+router
+  .route("/message/:id")
+  .get(indexController.indexDeleteMessageGet)
+  .post(indexController.indexDeleteMessagePost);
+
 module.exports = router;

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/style.css">
+  <title><%= title %></title>
+</head>
+
+<body>
+  <% if(currentUser && currentUser.is_admin) { %>
+  <h1><%= title %></h1>
+  <h2>Are you sure you want to delete this message forever?</h2>
+  <form action="/message/<%= message.id %>" method="post"><button type="submit">DELETE</button></form>
+  <p>Title: <%= message.title %></p>
+  <p><%= message.message %></p>
+  <p>Posted by: <%= `${message.username} on ${message.date}` %></p>
+  <% } else { %>
+  <p>You are not authorized to be here. Go <a href="/">home</a> kid.</p>
+  <% } %>
+</body>
+
+</html>

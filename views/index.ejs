@@ -21,13 +21,16 @@
   <% } else { %>
   <p><a href="/login">Login</a> or <a href="/signup">Sign Up</a> and become a member to see message details and post your own messages.</p>
   <% } %>
-  <% if (locals.messages) { %>
+  <% if (locals.messages.length > 0) { %>
   <ul>
     <% messages.forEach(message=>{ %>
     <li>
       <p>Title: <%= message.title %></p>
       <p><%= message.message %></p>
       <p>Posted by: <%= currentUser && currentUser.is_member ? `${message.username} on ${message.date}` : 'Anonymous User' %></p>
+      <% if (currentUser && currentUser.is_admin) { %>
+      <a href="/message/<%= message.id %>">Delete</a>
+      <% } %>
     </li>
     <% }) %>
   </ul>

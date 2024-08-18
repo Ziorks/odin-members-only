@@ -62,7 +62,7 @@ const validateMessage = [
 
 //name convention <rootPath><thing><httpVerb>
 async function indexGet(req, res) {
-  const messages = await db.getMessages();
+  const messages = await db.getAllMessages();
   res.render("index", { title: "Homepage", messages });
 }
 
@@ -162,6 +162,26 @@ const indexMessagePost = [
   },
 ];
 
+async function indexDeleteMessageGet(req, res, next) {
+  try {
+    const messageId = req.params.id;
+    const message = await db.getMessageById(messageId);
+    res.render("deleteMessage", { title: "Delete Message", message });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function indexDeleteMessagePost(req, res, next) {
+  try {
+    const messageId = req.params.id;
+    await db.deleteMessage(messageId);
+    res.redirect("/");
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   indexGet,
   indexSignupGet,
@@ -173,4 +193,6 @@ module.exports = {
   indexLogoutGet,
   indexMessageGet,
   indexMessagePost,
+  indexDeleteMessageGet,
+  indexDeleteMessagePost,
 };
