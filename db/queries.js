@@ -2,7 +2,7 @@ const pool = require("./pool");
 
 async function getAllMessages() {
   const { rows } = await pool.query(
-    "SELECT messages.id, messages.title, messages.message, users.username, messages.date FROM messages JOIN users ON messages.user_id = users.id"
+    "SELECT messages.id, messages.title, messages.message, users.username, messages.date FROM messages JOIN users ON messages.user_id = users.id ORDER BY messages.date"
   );
   return rows;
 }
