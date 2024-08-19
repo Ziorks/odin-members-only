@@ -49,6 +49,12 @@ const validateMembership = [
     .withMessage("Incorrect password. (try 'applesauce')"),
 ];
 
+const validateAdmin = [
+  body("password")
+    .equals(process.env.ADMIN_PASSWORD)
+    .withMessage("Incorrect password. (no hints this time)"),
+];
+
 const validateMessage = [
   body("title")
     .trim()
@@ -182,6 +188,29 @@ async function indexDeleteMessagePost(req, res, next) {
   }
 }
 
+function indexAdminGet(req, res) {
+  res.render("admin", { title: "Activate Admin" });
+}
+
+const indexAdminPost = [
+  validateAdmin,
+  async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res
+        .status(400)
+        .render("admin", { title: "Activate Admin", errors: errors.array() });
+    }
+
+    try {
+      await db.giveUserAdmin(req.user.id);
+      res.redirect("/");
+    } catch (err) {
+      next(err);
+    }
+  },
+];
+
 module.exports = {
   indexGet,
   indexSignupGet,
@@ -195,4 +224,6 @@ module.exports = {
   indexMessagePost,
   indexDeleteMessageGet,
   indexDeleteMessagePost,
+  indexAdminGet,
+  indexAdminPost,
 };

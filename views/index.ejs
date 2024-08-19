@@ -14,6 +14,9 @@
     <a href="/logout">Logout</a>
   </p>
   <% if (currentUser.is_member) { %>
+  <% if (!currentUser.is_admin) { %>
+  <p>Become an <a href="/admin">admin</a> to delete messages.</p>
+  <% } %>
   <a href="/message">Create a new message</a>
   <% } else { %>
   <p>Become a <a href="/membership">member</a> to see message details and post your own messages.</p>

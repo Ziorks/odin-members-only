@@ -9,19 +9,19 @@
 
 <body>
   <h1><%= title %></h1>
-  <% if (currentUser && !currentUser.is_member) { %>
+  <% if (currentUser && !currentUser.is_admin) { %>
   <%- include('partials/errors.ejs') %>
-  <form action="/membership" method="post">
+  <form action="/admin" method="post">
     <div>
       <label for="password">Password:</label>
       <input type="password" name="password" id="password" required>
     </div>
-    <button type="submit">Become a member</button>
+    <button type="submit">Become an admin</button>
   </form>
   <% } else if (currentUser) { %>
-  <p>You are already a member. Return to <a href="/">homepage</a>.</p>
+  <p>You are already an admin. Return to <a href="/">homepage</a>.</p>
   <% } else { %>
-  <p>Please <a href="/login">Login</a>, then we can talk about becoming a member.</p>
+  <p>Please <a href="/login">Login</a>, then we can talk about becoming an admin.</p>
   <% } %>
 </body>
 

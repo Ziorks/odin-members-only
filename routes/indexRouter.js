@@ -20,6 +20,11 @@ router
   .get(indexController.indexMembershipGet)
   .post(indexController.indexMembershipPost);
 
+router
+  .route("/admin")
+  .get(indexController.indexAdminGet)
+  .post(indexController.indexAdminPost);
+
 router.get("/logout", indexController.indexLogoutGet);
 
 router
