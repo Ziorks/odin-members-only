@@ -5,44 +5,44 @@ const SQL = `
 CREATE TABLE IF NOT EXISTS "session" (
   "sid" varchar NOT NULL COLLATE "default",
   "sess" json NOT NULL,
-  "expire" timestamp(6) NOT NULL
+  "expire" timestamp(6) NOT NULL,
+  CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE
 )
 WITH (OIDS=FALSE);
 
-ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
+CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire");
 
-CREATE INDEX "IDX_session_expire" ON "session" ("expire");
-
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    first_name VARCHAR ( 255 ) NOT NULL,
-    last_name VARCHAR ( 255 ) NOT NULL,
-    username VARCHAR ( 255 ) NOT NULL,
-    password VARCHAR ( 255 ) NOT NULL,
-    is_member BOOLEAN NOT NULL DEFAULT FALSE,
-    is_admin BOOLEAN NOT NULL DEFAULT FALSE
+CREATE TABLE IF NOT EXISTS "user" (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  first_name VARCHAR(255) NOT NULL,
+  last_name VARCHAR(255) NOT NULL,
+  username VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  member BOOLEAN NOT NULL DEFAULT FALSE,
+  admin BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-CREATE TABLE IF NOT EXISTS messages (
-    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    title VARCHAR ( 255 ) NOT NULL,
-    message VARCHAR ( 255 ) NOT NULL,
-    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    user_id INTEGER REFERENCES users(id)
+CREATE TABLE IF NOT EXISTS "message" (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  title VARCHAR(255) NOT NULL,
+  body TEXT NOT NULL,
+  timestamp TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  user_id INTEGER NOT NULL REFERENCES "user" (id)
 );
 `;
 
 async function main() {
   console.log("seeding...");
+
   const client = new Client({
-    connectionString: process.env.DATABASE_URL, //postgresql://<roleName>:<rolePassword>@localhost:<databasePort>/<databaseName>
+    connectionString: process.env.CONNECTION_STRING,
   });
+
   await client.connect();
   await client.query(SQL);
   await client.end();
+
   console.log("done");
 }
 
 main();
-
-//run this file once to create tables and/or add data to a database

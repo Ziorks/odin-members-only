@@ -1,40 +1,16 @@
 const { Router } = require("express");
-const indexController = require("../controllers/indexController");
+const {
+  indexGet,
+  signupFormGet,
+  signupFormPost,
+  loginFormGet,
+  loginFormPost,
+} = require("../controllers/indexController");
 
 const router = Router();
 
-router.get("/", indexController.indexGet);
-
-router
-  .route("/signup")
-  .get(indexController.indexSignupGet)
-  .post(indexController.indexSignupPost);
-
-router
-  .route("/login")
-  .get(indexController.indexLoginGet)
-  .post(indexController.indexLoginPost);
-
-router
-  .route("/membership")
-  .get(indexController.indexMembershipGet)
-  .post(indexController.indexMembershipPost);
-
-router
-  .route("/admin")
-  .get(indexController.indexAdminGet)
-  .post(indexController.indexAdminPost);
-
-router.get("/logout", indexController.indexLogoutGet);
-
-router
-  .route("/message")
-  .get(indexController.indexMessageGet)
-  .post(indexController.indexMessagePost);
-
-router
-  .route("/message/:id")
-  .get(indexController.indexDeleteMessageGet)
-  .post(indexController.indexDeleteMessagePost);
+router.get("/", indexGet);
+router.route("/sign-up").get(signupFormGet).post(signupFormPost);
+router.route("/login").get(loginFormGet).post(loginFormPost);
 
 module.exports = router;

@@ -3,42 +3,41 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="/style.css">
-  <title><%= title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles.css">
+  <title>Home</title>
 </head>
 
 <body>
-  <h1><%= title %></h1>
-  <% if (currentUser) { %>
-  <p>Welcome <%= currentUser.username %>!
-    <a href="/logout">Logout</a>
-  </p>
-  <% if (currentUser.is_member) { %>
-  <% if (!currentUser.is_admin) { %>
-  <p>Become an <a href="/admin">admin</a> to delete messages.</p>
-  <% } %>
-  <a href="/message">Create a new message</a>
+  <% if(locals.currentUser) { %>
+  <h1>Welcome back <%= currentUser.username %>!</h1>
+  <div><a href="new-message">Create a New Message</a> <a href="/membership">Membership</a> <a href="/logout">Logout</a></div>
   <% } else { %>
-  <p>Become a <a href="/membership">member</a> to see message details and post your own messages.</p>
+  <h1>Welcome!</h1>
+  <p>Please <a href="/login">login</a> or <a href="/sign-up">sign up</a> to get started.</p>
   <% } %>
-  <% } else { %>
-  <p><a href="/login">Login</a> or <a href="/signup">Sign Up</a> and become a member to see message details and post your own messages.</p>
-  <% } %>
-  <% if (locals.messages.length > 0) { %>
-  <ul>
+  <br>
+  <h2>Messages</h2>
+  <br>
+  <% if (messages.length > 0) { %>
+  <ol>
     <% messages.forEach(message=>{ %>
     <li>
       <p>Title: <%= message.title %></p>
-      <p><%= message.message %></p>
-      <p>Posted by: <%= currentUser && currentUser.is_member ? `${message.username} on ${message.date}` : 'Anonymous User' %></p>
-      <% if (currentUser && currentUser.is_admin) { %>
-      <a href="/message/<%= message.id %>">Delete</a>
+      <p>Message: <%= message.body %></p>
+      <p>User: <%= message.username %></p>
+      <p>Posted: <%= message.timestamp %></p>
+      <% if (currentUser && currentUser.admin) { %>
+      <form action="/message/<%= message.id %>/delete" method="post" onsubmit="return confirm('Are you sure you want to delete this message forever?')">
+        <button type="submit">Delete</button>
+      </form>
       <% } %>
     </li>
+    <br>
     <% }) %>
-  </ul>
+  </ol>
   <% } else { %>
-  <p>No messages yet :&lpar;</p>
+  <p>There are no messages.</p>
   <% } %>
 </body>
 

@@ -3,24 +3,29 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="/style.css">
-  <title><%= title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles.css">
+  <title>Login</title>
 </head>
 
 <body>
-  <h1><%= title %></h1>
-  <%- include('partials/errors.ejs') %>
+  <% if (!locals.currentUser) { %>
+  <h1>Login</h1>
   <form action="/login" method="post">
     <div>
-      <label for="username">Username:</label>
-      <input type="text" name="username" id="username" placeholder="Username" required>
+      <label for="username">Username: </label>
+      <input type="text" name="username" id="username" required>
     </div>
     <div>
-      <label for="password">Password:</label>
-      <input type="password" name="password" id="password" placeholder="Password" required>
+      <label for="password">Password: </label>
+      <input type="password" name="password" id="password" required>
     </div>
     <button type="submit">Login</button>
   </form>
+  <% } else { %>
+  <p>You are already logged in.</p>
+  <a href="/">Back to Home</a>
+  <% } %>
 </body>
 
 </html>

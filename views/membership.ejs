@@ -3,25 +3,25 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="/style.css">
-  <title><%= title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles.css">
+  <title>Membership</title>
 </head>
 
 <body>
-  <h1><%= title %></h1>
-  <% if (currentUser && !currentUser.is_member) { %>
+  <h1>Membership Status: <%= currentUser.member ? 'Active' : 'Inactive' %></h1>
+  <% if (currentUser.member) { %>
+  <a href="/">Back to Home</a>
+  <% } else { %>
+  <p>Simply enter the secret code and membership is yours.</p>
   <%- include('partials/errors.ejs') %>
   <form action="/membership" method="post">
     <div>
-      <label for="password">Password:</label>
-      <input type="password" name="password" id="password" required>
+      <label for="membershipSecret">Secret Code: </label>
+      <input type="password" name="membershipSecret" id="membershipSecret" required>
     </div>
-    <button type="submit">Become a member</button>
+    <button type="submit">Submit</button>
   </form>
-  <% } else if (currentUser) { %>
-  <p>You are already a member. Return to <a href="/">homepage</a>.</p>
-  <% } else { %>
-  <p>Please <a href="/login">Login</a>, then we can talk about becoming a member.</p>
   <% } %>
 </body>
 
